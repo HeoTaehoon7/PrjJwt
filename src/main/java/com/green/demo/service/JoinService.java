@@ -1,5 +1,6 @@
 package com.green.demo.service;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.green.demo.dto.JoinDTO;
@@ -9,9 +10,15 @@ import com.green.demo.repository.UserRepository;
 @Service
 public class JoinService {
 	
-	private  UserRepository  userRepository;
-	public JoinService(UserRepository userRepository) {
-		this.userRepository = userRepository;
+	private  BCryptPasswordEncoder  bCryptPasswordEncoder;
+	private  UserRepository         userRepository;
+	
+	public JoinService
+			UserRepository         userRepository,
+			BCryptPasswordEncoder  bCryptPasswordEncoder
+			) {
+		this.userRepository        =  userRepository;
+		this.bCryptPasswordEncoder =  bCryptPasswordEncoder;
 	}
 
 	public void addUser(JoinDTO joinDTO) {
@@ -28,7 +35,7 @@ public class JoinService {
 		
 		UserEntity  user = new UserEntity();
 		user.setUsername(username);
-		user.setPassword(password);
+		user.setPassword( bCryptPasswordEncoder.encode( password ) );
 		user.setName(name);
 		user.setRole("ROLE_ADMIN");
 		
